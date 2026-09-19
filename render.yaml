@@ -1,0 +1,43 @@
+services:
+  # Maphy Node.js Backend API
+  - type: web
+    name: maphy-backend
+    env: node
+    rootDir: demo_maphy_server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      - key: DB_DIALECT
+        value: postgres
+      - key: DB_HOST
+        fromDatabase:
+          name: maphy-postgres
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: maphy-postgres
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: maphy-postgres
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: maphy-postgres
+          property: user
+      - key: DB_PASS
+        fromDatabase:
+          name: maphy-postgres
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+
+databases:
+  # Maphy PostgreSQL Database
+  - name: maphy-postgres
+    databaseName: maphy
+    user: maphy_user

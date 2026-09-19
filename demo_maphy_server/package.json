@@ -1,0 +1,52 @@
+{
+  "name": "snape",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "test": "mocha test --debug-brk"
+  },
+  "dependencies": {
+    "@getbrevo/brevo": "^2.2.0",
+    "@slack/webhook": "^6.1.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "email-templates": "^8.0.7",
+    "express": "~4.16.1",
+    "express-winston": "^4.1.0",
+    "helmet": "^4.5.0",
+    "http-errors": "~1.6.3",
+    "imagemagick": "^0.1.3",
+    "jade": "~1.11.0",
+    "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1",
+    "morgan": "~1.9.1",
+    "multer": "^1.4.2",
+    "mysql2": "^2.2.5",
+    "nodemailer": "^6.6.3",
+    "nodemailer-sendinblue-transport": "^1.2.3",
+    "otp-generator": "^2.0.1",
+    "pg": "^8.23.0",
+    "pg-hstore": "^2.3.4",
+    "qrcode": "^1.4.4",
+    "random": "^3.0.6",
+    "sequelize": "^6.3.5",
+    "sib-api-v3-sdk": "^8.5.0",
+    "speakeasy": "^2.0.0",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6",
+    "winston": "^3.3.3",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.3",
+    "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
+    "mocha": "^9.1.0"
+  }
+}

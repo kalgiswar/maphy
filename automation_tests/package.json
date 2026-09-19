@@ -1,0 +1,38 @@
+{
+  "name": "maphy-automation-tests",
+  "version": "1.0.0",
+  "description": "Selenium Webdriver integration tests for Maphy UI",
+  "main": "specs/login.spec.js",
+  "scripts": {
+    "test": "mocha specs/**/*.spec.js --require ./test_setup.js --timeout 60000",
+    "test:smoke": "mocha \"specs/smoke/**/*.spec.js\" --require ./test_setup.js --timeout 180000",
+    "test:smoke:api": "mocha specs/smoke/project_api_smoke.spec.js --require ./test_setup.js --timeout 120000",
+    "test:smoke:api:failures": "mocha specs/smoke/project_api_failed_endpoints.spec.js --require ./test_setup.js --timeout 60000",
+    "test:smoke:ui": "mocha specs/smoke/project_pages_smoke.spec.js --require ./test_setup.js --timeout 180000",
+    "test:workflow": "mocha \"specs/other/**/*.spec.js\" --require ./test_setup.js --timeout 180000",
+    "test:workflow:report": "mocha \"specs/other/**/*.spec.js\" --require ./test_setup.js --reporter mochawesome --timeout 180000",
+    "test:security": "mocha \"specs/regression/**/*.spec.js\" --require ./test_setup.js --timeout 60000",
+    "test:security:report": "node scripts/generate_security_report.js",
+    "test:security:mochawesome": "mocha \"specs/regression/**/*.spec.js\" --require ./test_setup.js --reporter mochawesome --timeout 60000",
+    "test:rbac": "mocha \"specs/rbac/**/*.spec.js\" --require ./test_setup.js --timeout 120000",
+    "test:rbac:lifecycle": "mocha specs/rbac/role_lifecycle.spec.js --require ./test_setup.js --timeout 120000",
+    "test:rbac:super-admin": "mocha specs/rbac/role_api_super_admin.spec.js --require ./test_setup.js --timeout 60000",
+    "test:rbac:admin": "mocha specs/rbac/role_api_admin.spec.js --require ./test_setup.js --timeout 60000",
+    "test:rbac:manager": "mocha specs/rbac/role_api_manager.spec.js --require ./test_setup.js --timeout 60000",
+    "test:rbac:permissions": "mocha specs/rbac/role_groups_permissions.spec.js --require ./test_setup.js --timeout 300000",
+    "test:rbac:report": "mocha \"specs/rbac/**/*.spec.js\" --require ./test_setup.js --reporter mochawesome --timeout 300000",
+    "test:report": "mocha specs/**/*.spec.js --require ./test_setup.js --reporter mochawesome --timeout 60000"
+  },
+  "dependencies": {
+    "axios": "^1.18.0",
+    "chai": "^4.3.7",
+    "cross-env": "^7.0.3",
+    "form-data": "^4.0.6",
+    "mocha": "^10.2.0",
+    "selenium-webdriver": "^4.16.0"
+  },
+  "devDependencies": {
+    "dotenv": "^17.4.2",
+    "mochawesome": "^7.1.4"
+  }
+}

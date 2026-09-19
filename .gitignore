@@ -1,0 +1,31 @@
+# Dependency folders
+node_modules/
+demo_maphy_client/node_modules/
+demo_maphy_server/node_modules/
+
+# Environment files
+.env
+demo_maphy_server/.env
+demo_maphy_client/.env.local
+demo_maphy_client/.env.development.local
+demo_maphy_client/.env.test.local
+demo_maphy_client/.env.production.local
+
+# Build outputs
+demo_maphy_client/build/
+demo_maphy_client/dist/
+
+# Logs
+*.log
+demo_maphy_server/combined.log
+demo_maphy_server/error.log
+
+# Uploaded temp files (keep templates)
+demo_maphy_server/uploads/*
+!demo_maphy_server/uploads/assets_bulk_import_template.xlsx
+!demo_maphy_server/uploads/sample_restaurant_assets_bulk_import.xlsx
+!demo_maphy_server/uploads/sample_restaurant_assets_bulk_import.csv
+
+# OS metadata
+.DS_Store
+Thumbs.db

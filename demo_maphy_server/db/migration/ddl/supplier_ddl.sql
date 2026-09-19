@@ -1,0 +1,1 @@
+ALTER TABLE suppliers modify  COLUMN country varchar(5)

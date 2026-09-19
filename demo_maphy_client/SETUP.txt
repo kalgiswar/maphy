@@ -1,0 +1,59 @@
+================================================================================
+MAPHY ASSET LIFECYCLE MANAGEMENT - GETTING STARTED GUIDE
+================================================================================
+
+This document contains the commands to set up, build, and run the project, along with a summary of the technology stack.
+
+--------------------------------------------------------------------------------
+1. INSTALLATION COMMANDS
+--------------------------------------------------------------------------------
+Before running the project, you must install the node modules:
+
+# Install all dependencies from package.json
+npm install
+
+--------------------------------------------------------------------------------
+2. RUNNING COMMANDS
+--------------------------------------------------------------------------------
+You can run the following commands in the project directory:
+
+# Start the local development server (typically on http://localhost:3000)
+npm start
+
+# Build the production bundle (creates optimized files in the /build folder)
+npm run build
+
+# Launch the interactive test runner
+npm test
+
+# Eject the CRA configurations (Warning: This is a one-way operation)
+npm run eject
+
+--------------------------------------------------------------------------------
+3. PROJECT TECH STACK
+--------------------------------------------------------------------------------
+The project is built on the following technologies:
+
+Core Framework:
+- React (v18.2.0) - Modern front-end JavaScript library
+- Create React App - Development workflow bootstrapper
+
+Styling & UI:
+- Vanilla CSS & Bootstrap (v5.3.3) - Responsive UI layouts
+- React Bootstrap (v2.10.2) - Native React bootstrap components
+- FontAwesome Icons (v6.5.2) - High-quality iconography sets
+- Sass (v1.77.6) - Dynamic stylesheet processing
+
+Navigation & State:
+- React Router DOM (v6.22.3) - Declarative routing in React applications
+- React Hook Form (v7.51.3) - Form validation and input state management
+
+HTTP & Security:
+- Axios (v1.6.8) - Promise-based HTTP client for API requests
+- jwt-decode (v4.0.0) - Helper to decode JWT tokens for user permissions/info
+
+Charts & Visualizations:
+- React Google Charts (v4.0.1) - Responsive data visualizations (Pie, Bar)
+
+Internationalization:
+- i18next (v23.11.2) & react-i18next (v14.1.1) - Multi-language translation support

@@ -1,0 +1,122 @@
+.onboarding-wizard-card {
+  border-radius: 12px;
+  background: #ffffff;
+  transition: box-shadow 0.3s ease;
+}
+
+.onboarding-header {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.onboarding-progress {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.onboarding-progress .progress-bar {
+  background-color: #2ec4b6 !important;
+  border-radius: 10px;
+}
+
+.onboarding-action-btn {
+  min-width: 200px;
+  transition: all 0.2s ease;
+}
+
+.onboarding-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.onboarding-step-item {
+  border: 1px solid #e9ecef;
+  transition: all 0.2s ease;
+}
+
+.onboarding-step-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+  border-color: #2a5298 !important;
+}
+
+.onboarding-step-item.bg-success-subtle {
+  background-color: #e8f5e9 !important;
+  border-color: #c8e6c9 !important;
+  border-left-color: #4caf50 !important;
+}
+
+.onboarding-step-item.bg-light {
+  background-color: #f8f9fa !important;
+  border-color: #e9ecef !important;
+  border-left-color: #2a5298 !important;
+}
+
+.onboarding-setup-btn {
+  background-color: #2a5298;
+  border-color: #2a5298;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.onboarding-setup-btn:hover {
+  background-color: #1e3c72;
+  border-color: #1e3c72;
+}
+
+.hover-white:hover {
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.bg-success-subtle .step-title {
+  color: #2e7d32 !important;
+}
+
+.dataTable.wrapper .onboarding-wizard-card.card {
+  height: auto !important;
+  overflow: visible !important;
+  transform: none !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02) !important;
+}
+
+.dataTable.wrapper .onboarding-wizard-card.card:hover {
+  transform: none !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02) !important;
+}
+
+.dataTable.wrapper .onboarding-wizard-card.card .card-body {
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.onboarding-steps-scroll-container {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 16px;
+  padding-bottom: 15px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Styled scrollbar for beautiful premium feel */
+.onboarding-steps-scroll-container::-webkit-scrollbar {
+  height: 6px;
+}
+
+.onboarding-steps-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.onboarding-steps-scroll-container::-webkit-scrollbar-thumb {
+  background: #2a5298;
+  border-radius: 10px;
+}
+
+.onboarding-steps-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #1e3c72;
+}
+

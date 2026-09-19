@@ -1,0 +1,1 @@
+alter table assets add (latitude varchar(20), longitude varchar(20), audit_status_id integer)

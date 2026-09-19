@@ -1,0 +1,96 @@
+Automation Tests Overview for Maphy
+===================================
+
+This document explains **what** is being tested, **how** the tests are executed, **why** those particular payloads and scenarios are chosen, and **what** the reported error messages mean.
+
+---
+
+### 1. Test Runner Summary (Mochawesome)
+- **Run time:** ~44 seconds for the entire suite.
+- **Total specs:** 13 files (10 API specs, 1 UI spec, plus the report generator).
+- **Report format:** Mochawesome HTML (`mochawesome.html`).
+- The suite is invoked via the npm script `npm run test:security:mochawesome` which runs Mocha with the `--reporter mochawesome` flag and then generates the Markdown inventory and checklist through `scripts/generate_security_report.js`.
+
+---
+
+### 2. Individual Spec Files
+| Spec File | Primary Focus | Execution Time | Pass / Fail | Remarks |
+|-----------|---------------|----------------|-------------|---------|
+| `specs/api/security_api.spec.js` | **Authentication boundaries**, **query‑payload handling**, **response exposure**, **high‑risk public endpoints** | 989 ms – 3 s (different tests) | 10 / 10, 12 / 7, 2 / 2, 1 / 1 | Covers generic API endpoints; the *unknown sort* issue (see note) is surfaced here. |
+| `specs/api/security_auth_jwt.spec.js` | **Authentication, Session, JWT security** | 931 ms | 9 / 7 (passes / fails) | Tests weak/default credentials, malformed tokens, `alg:none` JWTs, expired tokens, missing Bearer headers. |
+| `specs/api/security_authorization_access_control.spec.js` | **Authorization, BOLA, Function‑level access** | 412 ms | 5 / 3 (passes / fails) | Checks for broken object‑level access, privilege‑escalation paths, and hidden‑field mass‑assignment. |
+| `specs/api/security_discovery_scope.spec.js` | **Scope definition, API discovery, reconnaissance** | 470 ms | 7 / 6 | Generates an inventory of reachable endpoints, validates the `TEST_API_URL` resolution order, and records version information. |
+| `specs/api/security_graphql_business_logic.spec.js` | **GraphQL introspection & business‑logic checks** | 55 ms | 3 / 1 (passes / fails) | Ensures GraphQL introspection is disabled when out‑of‑scope and validates negative‑quantity or out‑of‑sequence workflows. |
+| `specs/api/security_input_parameter.spec.js` | **Input validation & parameter manipulation** | 3 s | 6 / 2 (passes / fails) | Sends malformed SQL‑like, NoSQL‑like, XML/XXE, XSS, and invalid `sort`/`order` values. |
+| `specs/api/security_logging_monitoring.spec.js` | **Logging / monitoring validation** | 1 ms | 2 / 2 | Confirms audit‑log entries are produced for privileged actions. |
+| `specs/api/security_misconfig_data_error.spec.js` | **Security misconfiguration, data exposure, error handling** | 1.1 s | 7 / 5 (passes / fails) | Checks security headers, CORS, public debug endpoints, stack‑trace leakage, and generic error messages. |
+| `specs/ui/security_ui.spec.js` | **Selenium UI security regression** | 32.8 s | 4 / 4 | Drives a real browser (Chrome) against the UI, exercising client‑side XSS, CSRF token handling, and UI‑level rate‑limit bursts. |
+
+---
+
+### 3. How the Tests Are Executed
+1. **Setup** – The test runner reads environment variables:
+   - `TEST_API_URL` (primary API endpoint)
+   - `TEST_BASE_URL` (UI base URL)
+   - `SECURITY_AUTHORIZED=true` (required flag to document permission)
+   - Optional toggles (`SECURITY_ENABLE_RATE_LIMIT_TESTS`, `SECURITY_ENABLE_MUTATION_TESTS`, etc.) that enable or skip expensive checks.
+2. **Mocha / Jest** – All `*.spec.js` files are loaded by Mocha (via `npm test`). Each file contains a series of `describe` / `it` blocks that issue HTTP requests (using `axios`) or Selenium commands (`driver_helper`).
+3. **Payload Generation** – Helper `security_payloads.js` defines payload dictionaries for:
+   - **Sort / order** values (including unknown columns such as `not_a_real_column`).
+   - **SQL/NoSQL injection strings**, **XML‑entity payloads**, **XSS vectors**.
+   - **JWT manipulation** (unsigned, expired, tampered). The payloads are mixed with legitimate data to test validation layers.
+4. **Reporting** – After the run, `scripts/generate_security_report.js` calls the two helper functions `writeEndpointInventoryReport` and `writeChecklistReport` which produce:
+   - **Endpoint inventory** (Markdown table of discovered routes). 
+   - **Checklist coverage** (summary of which security categories were exercised and how many tests passed). The paths are printed to the console (see lines 9‑10 of the script). 
+5. **Mochawesome HTML** – The HTML report lists each spec, the duration, and a pass/fail badge per test case. The snippet you shared is a trimmed view of that report.
+
+---
+
+### 4. Why These Payloads & Scenarios?
+| Category | Reason for testing |
+|----------|--------------------|
+| **Authentication boundaries** | Verify that only authorized credentials can obtain tokens or privileged endpoints. Prevents default/weak passwords and token forgery. |
+| **Query payload handling** | Many APIs accept `sort`, `order`, `filter` parameters. Passing unknown or malformed columns can lead to SQL errors or data leakage (the *unknown sort* bug discovered). |
+| **Response exposure** | Checks that internal error messages, stack traces, or secrets are not returned to the client. |
+| **High‑risk public endpoints** | Publicly reachable endpoints (health, version, telemetry) often expose version numbers or configuration that attackers can fingerprint. |
+| **JWT security** | JWTs are a common auth mechanism; testing for `alg:none`, missing Bearer, expiration, and tampering ensures the server validates signatures correctly. |
+| **Authorization / BOLA** | Object‑level access control (BOLA – Broken Object Level Authorization) can let a low‑privileged user access another user’s data. Tests with known cross‑resource IDs (`TEST_BOLA_OTHER_RESOURCE`) expose such bugs. |
+| **Scope discovery** | An attacker first maps the API surface; the discovery test ensures the suite knows every reachable route and its expected methods. |
+| **GraphQL & business logic** | GraphQL introspection can reveal the full schema. Business‑logic checks (e.g., negative quantities) ensure the server enforces domain rules beyond simple validation. |
+| **Input validation & parameter manipulation** | Classic injection vectors (SQL, NoSQL, XML‑XXE, XSS) test server‑side sanitisation and request parsing. |
+| **Logging & monitoring** | Even if the server blocks a request, it should emit audit entries for forensic analysis. |
+| **Misconfiguration & data exposure** | Validates security headers (`Content‑Security‑Policy`, `X‑Frame‑Options`), proper CORS configuration, and that debug endpoints are disabled in production. |
+| **UI security** | Client‑side attacks (XSS, CSRF, rate‑limit bursts) are exercised through Selenium to emulate a real user/browser. |
+
+---
+
+### 5. Why the “unknown sort” Error Appears
+- **Symptom:** Several endpoints return HTTP 500 when the `sort` query parameter is set to a column that does not exist (e.g., `?sort=not_a_real_column`).
+- **Root cause (documented in `SECURITY_TESTING.md` lines 71‑81):** The backend currently validates `sort` using a *regex‑only* whitelist which allows any alphabetic token. When the token does not map to a real column, the database throws an internal error, bubbling up as a 500.
+- **Remediation (line 81):** Replace the regex check with an **explicit per‑endpoint allowlist** of sortable columns and fall back to a safe default (e.g., `id`). This prevents the server from leaking internal errors and avoids denial‑of‑service via crafted sort parameters.
+
+---
+
+### 6. How to Read the Mochawesome Table
+The condensed view you posted contains the following columns:
+1. **Spec name** – the file path.
+2. **Test description** – human readable title inside `describe`.
+3. **Duration** – how long the spec took (e.g., `989ms`).
+4. **Pass count** – number of assertions that succeeded.
+5. **Fail count** – number of assertions that failed.
+6. **Skipped / pending** – (not shown here) would appear if a test is marked `it.skip`.
+
+By scanning the table you can quickly see which areas still have failing checks (e.g., the *Input Validation* spec has 2 failures). Those failures are the signals you should investigate.
+
+---
+
+### 7. Next Steps for the Team
+1. **Address the unknown‑sort bug** – implement the per‑endpoint allowlist as described.
+2. **Re‑run the suite** after fixing to verify the failure count drops to zero.
+3. **Add missing test data** for BOLA/F‑L A tests (provide real cross‑user IDs in the env vars).
+4. **Enable optional tests** (`SECURITY_ENABLE_RATE_LIMIT_TESTS`, `SECURITY_ENABLE_MUTATION_TESTS`) in a staging environment to broaden coverage.
+5. **Integrate CI** – pipe `npm run test:security:mochawesome` into your CI pipeline and archive the generated HTML report as an artifact.
+
+---
+
+*Generated on 2026‑06‑16 by Antigravity – the AI coding assistant.*

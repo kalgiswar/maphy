@@ -1,0 +1,1 @@
+alter table firm add expiration_date datetime
