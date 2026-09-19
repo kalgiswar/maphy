@@ -2,21 +2,36 @@ const { Sequelize } = require('sequelize');
 const { AsyncLocalStorage } = require('async_hooks');
 var {dbSettings} = require('../shared/constants');
 
-const dialect = process.env.DB_DIALECT || dbSettings.dialect || 'mysql';
-const dbPort = process.env.DB_PORT || (dialect === 'postgres' ? 5432 : 3306);
+let sequelize;
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-  host: process.env.DB_HOST,
-  port: dbPort,
-  dialect: dialect,
-  logging: false,
-  pool: {
-    max: 15,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-});
+if (process.env.DATABASE_URL) {
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: dialect,
+    logging: false,
+    dialectOptions: {
+      ssl: process.env.DB_SSL === 'true' ? { require: true, rejectUnauthorized: false } : false
+    },
+    pool: {
+      max: 15,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    }
+  });
+} else {
+  sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
+    host: process.env.DB_HOST,
+    port: dbPort,
+    dialect: dialect,
+    logging: false,
+    pool: {
+      max: 15,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    }
+  });
+}
 
 const requestStorage = new AsyncLocalStorage();
 sequelize.requestStorage = requestStorage;
