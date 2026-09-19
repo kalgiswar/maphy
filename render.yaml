@@ -3,6 +3,7 @@ services:
   - type: web
     name: maphy-backend
     env: node
+    plan: free
     rootDir: demo_maphy_server
     buildCommand: npm install
     startCommand: npm start
@@ -41,3 +42,5 @@ databases:
   - name: maphy-postgres
     databaseName: maphy
     user: maphy_user
+    plan: free
+
